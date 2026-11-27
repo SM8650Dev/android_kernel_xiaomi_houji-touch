@@ -1,3 +1,5 @@
+ccflags-y += -I$(TOUCH_ROOT)/include
+
 
 KDIR := $(TOP)/kernel_platform/common
 
