@@ -144,11 +144,10 @@ CREATE_ATTR(gesture_double_tap_enabled, {
 	},
 	{
 		int input;
+		int new_modes[DATA_MODE_33] = {0};
 
 		if (sscanf(buf, "%d", &input) < 0)
 			return -EINVAL;
-
-		int new_modes[DATA_MODE_33] = {0};
 		new_modes[DATA_MODE_14] = input;
 		driver_update_touch_mode(TOUCH_ID, new_modes, (1L << DATA_MODE_14));
 
@@ -173,11 +172,10 @@ CREATE_ATTR(fod_longpress_gesture_enabled, {
 	},
 	{
 		int input;
+		int new_modes[DATA_MODE_33] = {0};
 
 		if (sscanf(buf, "%d", &input) < 0)
 			return -EINVAL;
-
-		int new_modes[DATA_MODE_33] = {0};
 		new_modes[DATA_MODE_10] = input;
 		driver_update_touch_mode(TOUCH_ID, new_modes, (1L << DATA_MODE_10));
 
