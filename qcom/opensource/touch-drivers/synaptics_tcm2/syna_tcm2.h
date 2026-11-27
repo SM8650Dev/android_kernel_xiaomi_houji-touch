@@ -474,6 +474,7 @@ struct syna_tcm {
 	int palm_sensor_enable;
 	int palm_enable_status;
 	bool fod_finger;
+	bool thp_base_unsupported;
 	int charger_connected;
 	int report_rate_mode;
 	unsigned int gesture_type;

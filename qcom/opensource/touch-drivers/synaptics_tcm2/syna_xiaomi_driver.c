@@ -1069,14 +1069,23 @@ static void syna_set_ic_mode(enum set_ic_mode_enum mode, int *value)
 		out_buf_size = 3;
 		LOGD("%s out_buf:%x,%x,%x\n", __func__, out_buf[0], out_buf[1], out_buf[2]);
 	} else if (mode == SET_THP_BASE_STATUS) {
-		out_buf[0] = 0xC8;
-		out_buf[1] = 0x03;
-		out_buf[2] = 0x00;
-		out_buf[3] = 0x3A;
-		out_buf[4] = value[0] ? 0x04 : 0x03;
-		out_buf[5] = 0x00;
-		LOGD("%s out_buf:%x,%x,%x,%x,%x,%x\n", __func__, out_buf[0], out_buf[1], out_buf[2], out_buf[3], out_buf[4], out_buf[5]);
-		syna_tcm_set_cmd_noresponse(tcm_hcd->tcm_dev, out_buf, 6);
+		unsigned char resp_code = STATUS_INVALID;
+		struct tcm_dev *tcm_dev = tcm_hcd->tcm_dev;
+
+		if (tcm_hcd->thp_base_unsupported)
+			return;
+
+		/* Use the acknowledged command so unsupported firmware is detected. */
+		out_buf[0] = 0x3A;
+		out_buf[1] = value[0] ? 0x04 : 0x03;
+		retval = tcm_dev->write_message(tcm_dev, CMD_MultiFunction,
+				out_buf, 3, 3, &resp_code, RESP_IN_ATTN);
+		if (resp_code == STATUS_NOT_IMPLEMENTED) {
+			tcm_hcd->thp_base_unsupported = true;
+			LOGI("Firmware does not implement optional THP baseline control\n");
+		} else if (retval < 0) {
+			LOGE("Failed to set THP baseline status: %d\n", retval);
+		}
 		return;
 	} else if (mode == SET_THP_GLOVE_STATUS) {
 		out_buf[0] = 0xC8;
