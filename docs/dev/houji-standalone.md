@@ -13,5 +13,8 @@ do not require changes to the core kernel UAPI. Kbuild adds this include path.
 
 This import passed compile, modpost, link and BTF against the MiCode 6.1.25
 product kernel with CONFIG_ARCH_PINEAPPLE=y and CONFIG_TARGET_PRODUCT_HOUJI=y.
-Runtime THP interface compatibility is still being tested. Do not replace the
-kernel CRC/version checks with forced loading.
+Ordinary userdebug with the 105-module early ramdisk, SELinux enforcing and
+secure ADB boots and processes the CN raw frames through the existing vendor
+algorithm. Physical DOWN/MOVE/UP events were captured and the user confirmed
+working clicks and scrolling. Advanced gestures and FOD remain unverified.
+Keep kernel CRC, CFI and module version checks enabled.
